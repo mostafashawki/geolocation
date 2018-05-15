@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Get Location | HTML 5 Geolocation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+      <link href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0-beta.2/journal/bootstrap.min.css" rel="stylesheet" integrity="sha384-yFdRSqOUsIuNXAuTjcNpqulUmbDTPw39dNNtFnKPvCZAQ8iQApD6VWRs/I3MRmJf" crossorigin="anonymous">
+  </head>
+  <body>
+  <div class="container" style="text-align:center">
+
+    <h1>Geolocation example</h1><br>
+    <i class="fa fa-map-marker"></i>
+    <button onclick="getMyLocation()" class="btn btn-lg btn-primary btn-block">Get my location</button>
+    <div class="result"></div>
+
+  </div>
+
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+
+          function getLocation(){
+          var msg;
+
+          /**
+          first, test for feature support
+          **/
+          if('geolocation' in navigator){
+            // geolocation is supported :)
+            requestLocation();
+          }else{
+            // no geolocation :(
+            msg = "Sorry, looks like your browser doesn't support geolocation";
+            outputResult(msg); // output error message
+
+          }
+
+          /***
+          requestLocation() returns a message, either the users coordinates, or an error message
+          **/
+          function requestLocation(){
+            /**
+            getCurrentPosition() below accepts 3 arguments:
+            a success callback (required), an error callback  (optional), and a set of options (optional)
+            **/
+
+            var options = {
+              // enableHighAccuracy = should the device take extra time or power to return a really accurate result, or should it give you the quick (but less accurate) answer?
+              enableHighAccuracy: false,
+              // timeout = how long does the device have, in milliseconds to return a result?
+              timeout: 5000,
+              // maximumAge = maximum age for a possible previously-cached position. 0 = must return the current position, not a prior cached position
+              maximumAge: 0
+            };
+
+            // call getCurrentPosition()
+            navigator.geolocation.getCurrentPosition(success, error, options);
+
+            // upon success, do this
+            function success(pos){
+              // get longitude and latitude from the position object passed in
+              var lng = pos.coords.longitude;
+              var lat = pos.coords.latitude;
+              // and presto, we have the device's location!
+              msg = '<br>You appear to be at longitude: ' + lng + ' and latitude: ' + lat  + '<br><br><img src="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=300x300&maptype=roadmap&markers=color:red%7Clabel:A%7C' + lat + ',' + lng+ '&sensor=false">';
+              outputResult(msg); // output message
+
+            }
+
+            // upon error, do this
+            function error(err){
+              // return the error message
+              msg = 'Error: ' + err + ' :(';
+              outputResult(msg); // output button
+
+            }
+          } // end requestLocation();
+
+          /***
+          outputResult() inserts msg into the DOM
+          **/
+          function outputResult(msg){
+            $('.result').addClass('result').html(msg);
+          }
+          } // end getLocation()
+
+          function getMyLocation(){
+            $('.result').html('<i class="fa fa-spinner fa-spin"></i>');
+            getLocation();
+          }
+
+    </script>
+  </body>
+</html>
